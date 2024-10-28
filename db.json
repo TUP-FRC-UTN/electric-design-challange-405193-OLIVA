@@ -1,5 +1,104 @@
 {
-  "budgets": [],
+  "budgets": [
+    {
+      "id": "1e26",
+      "client": "Maxito",
+      "date": "2024-10-23",
+      "zoneMap": {
+        "Comedor": [
+          {
+            "id": "5",
+            "name": "Toma corriente triple",
+            "slots": 3,
+            "price": 1700
+          },
+          {
+            "id": "2",
+            "name": "Interruptor doble",
+            "slots": 2,
+            "price": 2000
+          }
+        ]
+      }
+    },
+    {
+      "id": "2abb",
+      "client": "trester",
+      "date": "2024-10-28",
+      "zoneMap": {
+        "Living": [
+          {
+            "id": "1",
+            "name": "Interruptor simple",
+            "slots": 1,
+            "price": 1000
+          },
+          {
+            "id": "1",
+            "name": "Interruptor simple",
+            "slots": 1,
+            "price": 1000
+          },
+          {
+            "id": "1",
+            "name": "Interruptor simple",
+            "slots": 1,
+            "price": 1000
+          }
+        ]
+      }
+    },
+    {
+      "id": "adf3",
+      "client": "trester",
+      "date": "2024-10-31",
+      "zoneMap": {
+        "Dormitorio": [
+          {
+            "id": "5",
+            "name": "Toma corriente triple",
+            "slots": 3,
+            "price": 1700
+          },
+          {
+            "id": "5",
+            "name": "Toma corriente triple",
+            "slots": 3,
+            "price": 1700
+          },
+          {
+            "id": "5",
+            "name": "Toma corriente triple",
+            "slots": 3,
+            "price": 1700
+          }
+        ]
+      }
+    },
+    {
+      "id": "556f",
+      "client": "Maxito",
+      "date": "2024-10-28",
+      "zoneMap": {
+        "Comedor": [
+          {
+            "id": "1",
+            "name": "Interruptor simple",
+            "slots": 1,
+            "price": 1000
+          }
+        ],
+        "Cocina": [
+          {
+            "id": "2",
+            "name": "Interruptor doble",
+            "slots": 2,
+            "price": 2000
+          }
+        ]
+      }
+    }
+  ],
   "module-types": [
     {
       "id": "1",

@@ -1,1 +1,23 @@
 <!-- BUILD IT FROM HERE https://getbootstrap.com/docs/5.3/content/tables/#striped-rows -->
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Cliente</th>
+            <th scope="col">Fecha</th>
+            <th scope="col">Módulos</th>
+            <th scope="col">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (budget of budgets; track budget.id) {
+            <tr>
+                <th scope="row">{{budget.id}}</th>
+                <td>{{budget.client}}</td>
+                <td>{{budget.date}}</td>
+                <td>{{calculateBudgetModules(budget)}}</td>
+                <td></td>
+            </tr>
+        }
+    </tbody>
+</table>
