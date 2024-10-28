@@ -1,16 +1,86 @@
-<!-- BUILT IT FROM:
-https://getbootstrap.com/docs/5.3/forms/form-control/#example
-https://getbootstrap.com/docs/5.3/forms/select/#default
-https://getbootstrap.com/docs/5.3/forms/select/#default -->
-
 <form [formGroup]="budgetForm">
-    <label for="cliente" class="form-label">Cliente</label>
-    <input type="text" class="form-control" formControlName="cliente">
+    <div class="row mt-3">
+        <div class="col-6">
+            <label for="client" class="form-label">Client</label>
+            <input type="text" class="form-control" id="client" formControlName="client">
+        </div>
+        <div class="col-6">
+            <label for="date" class="form-label">Fecha</label>
+            <input type="date" class="form-control" id="date" formControlName="client">
+        </div>
 
-    <label for="fecha" class="form-label">Fecha</label>
-    <input type="date" class="form-control" formControlName="fecha">
+        <div class="row mt-3">
+            <div class="col-1">
+                <h3>Zonas</h3>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-primary" (click)="agregarZona()">+</button>
+            </div>
+        </div>
+        <hr>
 
-    <button type="button" class="btn btn-primary">Agregar Zona</button>
+        <div formArrayName="zoneMap">
+            @for (zona of zoneMap.controls; track $index; let zIndex = $index) {
+                <div [formGroupName]="$index"> <!--ZONA INDIVIDUAL-->
+                    <div class="row mt-3">
+                        <div class="col-1">
+                            <label for="zone" class="form-label">Zona</label>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-close" (click)="eliminarZona(zIndex)"></button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <select class="form-select" formControlName="zone">
+                            @for (zone of zones; track zone) {
+                                <option [value]="zone">{{zone}}</option>
+                            }
+                        </select>
+                    </div>
 
-    <button type="button" class="btn btn-primary">Guardar</button>
+                    <div formArrayName="modules">
+                        <div class="row">
+                            <div class="col-2">
+                                <h4>Modulos de la zona</h4>
+                            </div>
+                            <div class="col">
+                                <button type="button" class="btn btn-primary" (click)="agregarModulo(zIndex)">+</button>
+                            </div>
+                        </div>
+                        @for (module of getModulesArray(zIndex).controls; track $index; let mIndex = $index) {
+                            <div [formGroupName]="mIndex">
+                                <div class="row mt-3">
+                                    <div class="col-1">
+                                        <label for="id" class="form-label">Modulo</label>
+                                    </div>
+                                    <div class="col">
+                                        <button type="button" class="btn btn-close" (click)="eliminarModulo(zIndex, mIndex)"></button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <select class="form-select" formControlName="id" (change)="onModuleSelect(zIndex, mIndex)">
+                                            @for (modulo of moduleTypeList; track modulo) {
+                                                <option [value]="modulo.id">{{modulo.name}}</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="col-3">
+                                        <label>Slots:</label>
+                                        <input formControlName="slots" type="number" readonly />
+                                    </div>
+                                    <div class="col-3">
+                                        <label>Precio:</label>
+                                        <input formControlName="price" type="number" readonly />
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div> <!--ZONA INDIVIDUAL-->
+                <hr>
+            }
+        </div>
+    </div>
+    <button (click)="guardarBudget()">Guardar</button>
 </form>
