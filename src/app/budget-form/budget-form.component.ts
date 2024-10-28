@@ -4,6 +4,8 @@ import { Subscription } from 'rxjs';
 import { ModuleService } from '../services/module.service';
 import { Budget, ModuleType, Zone } from '../models/budget';
 import { CommonModule } from '@angular/common';
+import { BudgetService } from '../services/budget.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-budget-form',
@@ -19,6 +21,8 @@ export class BudgetFormComponent implements OnInit {
   */
 
   private readonly moduleService = inject(ModuleService);
+  private readonly budgetService = inject(BudgetService);
+  private readonly router = inject(Router);
   private formBuilder: FormBuilder = new FormBuilder;
 
   zones = Object.values(Zone); // Extraemos las zonas del enum para usarlas en el formulario
@@ -87,33 +91,67 @@ getModulesArray(indexZona:number): FormArray{
     }
   }
 
-  guardarBudget(){
-    const budgetData: Budget = this.convertFormToBudget(this.budgetForm.value);
-      //console.log('Formulario enviado:', budgetData);
-    // if (this.budgetForm.valid) {
-    //   const budgetData: Budget = this.convertFormToBudget(this.budgetForm.value);
-    //   console.log('Formulario enviado:', budgetData);
-    // }
+  guardarBudget() {
+    console.log(this.budgetForm.valid);
+    if (this.budgetForm.valid) {
+      let budgetData: Budget = this.convertFormToBudget(this.budgetForm.value);
+      console.log(budgetData)
+
+
+      // Convierte zoneMap a un objeto simple
+    const zoneMapObject: any = {};
+    budgetData.zoneMap.forEach((modules, zone) => {
+      zoneMapObject[zone] = modules;
+    });
+    budgetData = { ...budgetData, zoneMap: zoneMapObject };
+
+      // Llama al servicio para postear el presupuesto
+      this.budgetService.postBudget(budgetData).subscribe({
+        next: (response) => {
+          console.log('Presupuesto guardado:', response);
+          // Redirige a la ruta 'budget-list' después de guardar
+          this.router.navigate(['/budget-list']);
+        },
+        error: (error) => {
+          console.error('Error al guardar el presupuesto:', error);
+          alert('Hubo un error al guardar el presupuesto');
+        }
+      });
+    }
+
   }
 
    // Convierte los datos del formulario a la estructura Budget
-    private convertFormToBudget(formValue: any): Budget {
-    const zoneMap = new Map<Zone, ModuleType[]>();
-    formValue.zoneMap.forEach((zoneGroup: any) => {
-      const zone = zoneGroup.zone;
-      const modulesIds = zoneGroup.modules;
-      const modules: ModuleType[] = [];
-      modulesIds.forEach((id: number) => {
-        modules.push(this.moduleTypeList.find(modulo => modulo.id === id) as ModuleType)
-      })
-
-      console.log(modules)
-      zoneMap.set(zone, modules);
-    });
-    return {
+  private convertFormToBudget(formValue: any): Budget {
+    const budget: Budget = {
       client: formValue.client,
       date: formValue.date,
-      zoneMap
+      zoneMap: new Map<Zone, ModuleType[]>()
     };
+  
+    const zones = this.zoneMap.controls; // Asumiendo que `zoneMap` es un FormArray
+    for (let i = 0; i < zones.length; i++) {
+      const zoneControl = zones.at(i);
+      if (!zoneControl) continue; // Si zoneControl es undefined, continúa al siguiente
+  
+      const zone = zoneControl.get('zone')?.value;
+      const modules = this.getModulesArray(i);
+  
+      const moduleTypes: ModuleType[] = [];
+      for (let j = 0; j < modules.length; j++) {
+        const moduleId = modules.at(j).get('id')?.value;
+        const selectedModule = this.moduleTypeList.find(mod => mod.id === moduleId);
+  
+        if (selectedModule) {
+          moduleTypes.push(selectedModule);
+        }
+      }
+  
+      if (zone) {
+        budget.zoneMap.set(zone, moduleTypes);
+      }
+    }
+  
+    return budget;
   }
 }

@@ -4,6 +4,9 @@ import { BudgetFormComponent } from './budget-form/budget-form.component';
 
 export const routes: Routes = [
     {
+        path: '', component: BudgetListComponent
+    },
+    {
         path: 'budget-list', component: BudgetListComponent
     },
     {
